@@ -1,59 +1,140 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# DevShort
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> A modern SaaS URL shortener platform built with Laravel 12.
 
-## About Laravel
+DevShort allows users to create short links, manage them via a dashboard, analyze link performance, and use custom branded domains — all with a subscription-based model.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **URL Shortening** — Generate short links from long URLs
+- **Custom Alias** — Define your own short link slug (e.g. `devshort.id/promo`)
+- **Custom Branded Domain** — Connect your own domain (e.g. `go.brand.com/sale`)
+- **Link Analytics** — Track clicks, devices, countries, referrers
+- **QR Code Generator** — Downloadable QR codes for each link
+- **Link Expiration** — Set an expiry date for links
+- **Password Protected Links** — Require a password before redirecting
+- **Link Preview** — Append `+` to preview before redirecting (e.g. `devshort.id/promo+`)
+- **API Access** — Create and manage links via REST API
+- **Subscription System** — Free, Pro, and Business plans
+- **Super Admin Panel** — Platform management, user moderation, plan configuration
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Tech Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Layer | Technology |
+| --- | --- |
+| **Framework** | Laravel 12 (PHP 8.2) |
+| **Frontend** | Blade, TailwindCSS, Vanilla JS |
+| **Database** | MySQL / PostgreSQL |
+| **Cache** | Redis |
+| **Testing** | Pest 3 |
+| **Code Style** | Laravel Pint |
+| **Queue** | Laravel Queue (database / Redis) |
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Requirements
 
-### Premium Partners
+- PHP >= 8.2
+- Composer
+- Node.js >= 18 & npm
+- MySQL 8+ or PostgreSQL 15+
+- Redis (recommended)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## Installation
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 1. Clone the repository
 
-## Code of Conduct
+```bash
+git clone git@github.com:misnosugianto48/devshort.git
+cd devshort
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 2. Install dependencies
 
-## Security Vulnerabilities
+```bash
+composer install
+npm install
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 3. Environment setup
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+Update `.env` with your database and Redis credentials:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=devshort
+DB_USERNAME=root
+DB_PASSWORD=
+
+CACHE_STORE=redis
+REDIS_HOST=127.0.0.1
+```
+
+### 4. Run migrations
+
+```bash
+php artisan migrate
+```
+
+### 5. Build frontend assets
+
+```bash
+npm run build
+```
+
+### 6. Start the development server
+
+```bash
+# Option A: Using Laravel's built-in server
+php artisan serve
+
+# Option B: Using the dev command (runs Vite + server together)
+composer run dev
+```
+
+The application will be available at `http://localhost:8000`.
+
+---
+
+## Development
+
+```bash
+# Run tests
+php artisan test --compact
+
+# Run code formatter
+vendor/bin/pint
+
+# Run Vite dev server (hot reload)
+npm run dev
+
+# Run queue worker
+php artisan queue:work
+```
+
+---
+
+## Documentation
+
+- [Product Requirements (PRD)](doc/PRD.md)
+- [System Architecture & Flows](doc/ARCHITECTURE.md)
+- [Phased Implementation Plan](doc/PHASES.md)
+
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is proprietary software.
