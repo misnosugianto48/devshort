@@ -20,6 +20,7 @@ return [
 
     'resend' => [
         'key' => env('RESEND_API_KEY'),
+        'timeout' => 30,
     ],
 
     'ses' => [

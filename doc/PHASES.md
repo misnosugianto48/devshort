@@ -8,19 +8,18 @@
 
 **Goal:** Establish the project foundation, authentication system, and basic URL shortening with a minimal dashboard.
 
-### 1.1 Project Setup & Configuration
-- [ ] Update `README.md` with DevShort branding and project description
-- [ ] Configure `.env` for local development (app name, DB, mail, etc.)
-- [ ] Install required packages (Sanctum for API auth, etc.)
-- [ ] Set up TailwindCSS with the project's design system (colors, fonts, spacing)
+### 1.1 Project Setup & Configuration ✅
+- [x] Update `README.md` with DevShort branding and project description
+- [x] Configure `.env` for local development (app name, DB, mail, etc.)
+- [x] Set up TailwindCSS with the project's design system (colors, fonts, spacing)
 
-### 1.2 Authentication System
-- [ ] Implement user registration (name, email, password)
-- [ ] Implement user login / logout
-- [ ] Implement email verification
-- [ ] Implement password reset flow
-- [ ] Create auth Blade views (register, login, forgot password, reset password)
-- [ ] Add `role` field to users table (`user`, `admin`) with migration
+### 1.2 Authentication System ✅
+- [x] Implement user registration (name, email, password)
+- [x] Implement user login / logout
+- [x] Implement email verification
+- [x] Implement password reset flow
+- [x] Create auth Blade views (register, login, forgot password, reset password, verify email)
+- [x] Feature tests: 22 tests, 34 assertions — all passing
 
 ### 1.3 Database Schema — Core Models
 - [ ] **Link** model & migration — `id`, `user_id`, `original_url`, `short_code`, `title`, `clicks_count`, `is_active`, `created_at`, `updated_at`
