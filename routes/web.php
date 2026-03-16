@@ -45,3 +45,9 @@ Route::middleware('auth')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     });
 });
+
+// Short Link Redirect Route - MUST BE LAST
+// Alphanumeric, minimum 3 characters to avoid catching generic short root paths
+Route::get('/{shortCode}', \App\Http\Controllers\RedirectController::class)
+    ->where('shortCode', '[a-zA-Z0-9]{3,}')
+    ->name('link.redirect');
