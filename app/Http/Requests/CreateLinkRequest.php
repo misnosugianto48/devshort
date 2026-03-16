@@ -24,8 +24,16 @@ class CreateLinkRequest extends FormRequest
         return [
             'original_url' => ['required', 'url', 'max:2048'],
             'title' => ['nullable', 'string', 'max:255'],
-            // Future phase additions
-            // 'custom_alias' => ['nullable', 'string', 'alpha_dash', 'min:3', 'max:30', 'unique:links,short_code'],
+            'custom_alias' => [
+                'nullable',
+                'string',
+                'alpha_dash',
+                'min:3',
+                'max:30',
+                'unique:links,short_code',
+                'not_in:api,admin,dashboard,login,register,links,billing,settings,profile,logout,password,pricing,features',
+            ],
+            'expires_at' => ['nullable', 'date', 'after_or_equal:today'],
         ];
     }
 
@@ -41,6 +49,11 @@ class CreateLinkRequest extends FormRequest
             'original_url.url' => 'Format URL tujuan tidak valid.',
             'original_url.max' => 'URL tujuan terlalu panjang (maksimal 2048 karakter).',
             'title.max' => 'Judul tautan terlalu panjang (maksimal 255 karakter).',
+            'custom_alias.alpha_dash' => 'Custom alias hanya boleh berisi huruf, angka, strip (-), dan garis bawah (_).',
+            'custom_alias.min' => 'Custom alias minimal 3 karakter.',
+            'custom_alias.max' => 'Custom alias maksimal 30 karakter.',
+            'custom_alias.unique' => 'Custom alias ini sudah digunakan. Silakan pilih yang lain.',
+            'custom_alias.not_in' => 'Kata ini merupakan reservasi sistem dan tidak dapat digunakan sebagai alias.',
         ];
     }
 }

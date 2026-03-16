@@ -23,6 +23,16 @@ class RedirectController extends Controller
             abort(404, 'Link not found');
         }
 
+        // Check if the link has expired
+        if ($link->expires_at && $link->expires_at->isPast()) {
+            abort(410, 'Link has expired');
+        }
+
+        // If it's deactivated manually (but not expired), return 404
+        if (! $link->is_active) {
+            abort(404, 'Link is inactive');
+        }
+
         // Dispatch job to record the click analytics asynchronously
         RecordClickJob::dispatch(
             $link,

@@ -3,7 +3,7 @@
 @section('title', 'Overview')
 
 @section('content')
-<div x-data="{ openCreateModal: false }">
+<div x-data="{ openCreateModal: {{ $errors->any() ? 'true' : 'false' }}, hasExpiration: {{ old('expires_at') ? 'true' : 'false' }} }">
     <!-- Header Dashboard -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>
@@ -141,21 +141,25 @@
                 <div>
                     <label for="original_url" class="block text-sm font-bold text-slate-700 mb-2">URL Tujuan <span class="text-red-500">*</span></label>
                     <input type="url" name="original_url" id="original_url" required placeholder="https://example.com/very/long/path/to/my/awesome/article" class="w-full p-4 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-slate-700 bg-slate-50 focus:bg-white" value="{{ old('original_url') }}">
-                    <p class="text-xs text-slate-400 mt-2">Masukkan URL panjang yang ingin Anda perpendek.</p>
+                    @error('original_url')
+                        <p class="text-xs text-red-500 mt-2 font-semibold">{{ $message }}</p>
+                    @else
+                        <p class="text-xs text-slate-400 mt-2">Masukkan URL panjang yang ingin Anda perpendek.</p>
+                    @enderror
                 </div>
 
                 <div>
                     <label for="title" class="block text-sm font-bold text-slate-700 mb-2">Judul Referensi (Opsional)</label>
                     <input type="text" name="title" id="title" placeholder="Promo Campaign Agustus" class="w-full p-4 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-slate-700 bg-slate-50 focus:bg-white" value="{{ old('title') }}">
-                    <p class="text-xs text-slate-400 mt-2">Membantu Anda mengidentifikasi tautan ini di dashboard.</p>
+                    @error('title')
+                        <p class="text-xs text-red-500 mt-2 font-semibold">{{ $message }}</p>
+                    @else
+                        <p class="text-xs text-slate-400 mt-2">Membantu Anda mengidentifikasi tautan ini di dashboard.</p>
+                    @enderror
                 </div>
                 
-                <!-- Future Phase Placeholders -->
-                <div class="border-t pt-6 space-y-4 opacity-50 relative">
-                    <div class="absolute inset-0 bg-white/50 backdrop-blur-[1px] z-10 flex items-center justify-center">
-                        <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold shadow-sm">Fitur Premium (Segera Hadir)</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4 pointer-events-none">
+                <div class="border-t pt-6 space-y-4 relative">
+                    <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Domain</label>
                             <select disabled class="w-full p-3 border rounded-xl bg-slate-100">
@@ -163,13 +167,35 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Custom Alias</label>
-                            <input type="text" disabled placeholder="my-awesome-link" class="w-full p-3 border rounded-xl bg-slate-100">
+                            <label for="custom_alias" class="block text-sm font-bold text-slate-700 mb-2">Custom Alias</label>
+                            <input type="text" name="custom_alias" id="custom_alias" placeholder="my-awesome-link" class="w-full p-4 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-slate-700 bg-slate-50 focus:bg-white" value="{{ old('custom_alias') }}">
+                            @error('custom_alias')
+                                <p class="text-xs text-red-500 mt-2 font-semibold">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
                 </div>
 
-                <div class="pt-4 flex items-center justify-end gap-3">
+                <div class="border-t pt-4 space-y-4">
+                    <label class="flex items-start gap-3 cursor-pointer group p-3 rounded-xl hover:bg-slate-50 transition border border-transparent hover:border-slate-100">
+                        <div class="mt-0.5">
+                            <input type="checkbox" x-model="hasExpiration" class="w-5 h-5 accent-indigo-600 rounded">
+                        </div>
+                        <div>
+                            <span class="text-sm font-bold text-slate-800 block">Atur Batas Waktu Kadaluarsa</span>
+                            <span class="text-xs text-slate-500 block mt-0.5">Tautan akan otomatis nonaktif setelah tanggal yang ditentukan.</span>
+                        </div>
+                    </label>
+
+                    <div x-show="hasExpiration" x-cloak x-transition.opacity class="pl-11 pr-3 pb-3">
+                        <input type="datetime-local" name="expires_at" id="expires_at" class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-slate-700 bg-slate-50 focus:bg-white" value="{{ old('expires_at') }}">
+                        @error('expires_at')
+                            <p class="text-xs text-red-500 mt-2 font-semibold">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
                     <button type="button" @click="openCreateModal = false" class="px-6 py-3 rounded-xl font-bold text-slate-600 hover:bg-slate-100 transition">Batal</button>
                     <button type="submit" class="gradient-bg text-white px-8 py-3 rounded-xl font-bold hover:opacity-90 shadow-lg shadow-indigo-200 transition transform hover:-translate-y-0.5">Pendekkan!</button>
                 </div>

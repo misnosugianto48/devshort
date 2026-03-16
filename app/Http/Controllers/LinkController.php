@@ -33,10 +33,16 @@ class LinkController extends Controller
      */
     public function store(CreateLinkRequest $request): RedirectResponse
     {
+        $expiresAt = $request->validated('expires_at')
+            ? \Carbon\Carbon::parse($request->validated('expires_at'))
+            : null;
+
         $link = $this->linkService->createLink(
             $request->user(),
             $request->validated('original_url'),
-            $request->validated('title')
+            $request->validated('title'),
+            $request->validated('custom_alias'),
+            $expiresAt
         );
 
         return redirect()->back()->with('status', 'Tautan berhasil diperpendek!');

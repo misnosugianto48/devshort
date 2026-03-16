@@ -34,18 +34,18 @@
 - [x] Validate destination URLs (format, blacklist check)
 
 ### 1.5 User Dashboard — MVP
-- [ ] Dashboard layout (sidebar navigation, topbar, content area)
-- [ ] **Overview page** — total links, total clicks, recent links
-- [ ] **Create Link page** — form to shorten a URL
-- [ ] **Links list page** — paginated table of user's links with copy-to-clipboard
-- [ ] **Link detail page** — basic click stats (total clicks, click timeline chart)
+- [x] Dashboard layout (sidebar navigation, topbar, content area)
+- [x] **Overview page** — total links, total clicks, recent links
+- [x] **Create Link page** — form to shorten a URL
+- [x] **Links list page** — paginated table of user's links with copy-to-clipboard
+- [x] **Link detail page** — basic click stats (total clicks, click timeline chart)
 
 ### 1.6 Landing Page
-- [ ] Hero section with CTA
-- [ ] Features section
-- [ ] How it works section
-- [ ] Pricing plans section (static for now)
-- [ ] Footer
+- [x] Hero section with CTA
+- [x] Features section
+- [x] How it works section
+- [x] Pricing plans section (static for now)
+- [x] Footer
 
 ---
 

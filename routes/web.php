@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Short Link Redirect Route - MUST BE LAST
-// Alphanumeric, minimum 3 characters to avoid catching generic short root paths
+// Alphanumeric, hyphens, and underscores allowed, minimum 3 characters
 Route::get('/{shortCode}', \App\Http\Controllers\RedirectController::class)
-    ->where('shortCode', '[a-zA-Z0-9]{3,}')
+    ->where('shortCode', '[a-zA-Z0-9\-_]{3,}')
     ->name('link.redirect');

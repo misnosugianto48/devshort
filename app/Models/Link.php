@@ -20,6 +20,7 @@ class Link extends \Illuminate\Database\Eloquent\Model
         'short_code',
         'title',
         'is_active',
+        'expires_at',
     ];
 
     /**
@@ -30,6 +31,7 @@ class Link extends \Illuminate\Database\Eloquent\Model
         return [
             'is_active' => 'boolean',
             'clicks_count' => 'integer',
+            'expires_at' => 'datetime',
         ];
     }
 

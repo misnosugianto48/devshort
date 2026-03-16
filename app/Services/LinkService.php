@@ -12,15 +12,16 @@ class LinkService
     /**
      * Create a new short link for a user.
      */
-    public function createLink(User $user, string $originalUrl, ?string $title = null): Link
+    public function createLink(User $user, string $originalUrl, ?string $title = null, ?string $customAlias = null, ?\Carbon\Carbon $expiresAt = null): Link
     {
-        $shortCode = $this->generateShortCode();
+        $shortCode = $customAlias ?: $this->generateShortCode();
 
         $link = $user->links()->create([
             'original_url' => $originalUrl,
             'short_code' => $shortCode,
             'title' => $title,
             'is_active' => true,
+            'expires_at' => $expiresAt,
         ]);
 
         // Pre-cache the link to save an initial DB query on first visit
@@ -51,9 +52,7 @@ class LinkService
 
         // Try to get from cache first (1-5ms response time)
         return Cache::rememberForever($cacheKey, function () use ($code) {
-            return Link::where('short_code', $code)
-                ->where('is_active', true)
-                ->first();
+            return Link::where('short_code', $code)->first();
         });
     }
 
