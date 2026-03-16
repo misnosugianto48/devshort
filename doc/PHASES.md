@@ -22,16 +22,16 @@
 - [x] Feature tests: 22 tests, 34 assertions — all passing
 
 ### 1.3 Database Schema — Core Models
-- [ ] **Link** model & migration — `id`, `user_id`, `original_url`, `short_code`, `title`, `clicks_count`, `is_active`, `created_at`, `updated_at`
-- [ ] **Click** model & migration — `id`, `link_id`, `ip_address`, `user_agent`, `referer`, `country`, `device`, `browser`, `os`, `created_at`
-- [ ] Create model factories & seeders for both
+- [x] **Link** model & migration — `id`, `user_id`, `original_url`, `short_code`, `title`, `clicks_count`, `is_active`, `created_at`, `updated_at`
+- [x] **Click** model & migration — `id`, `link_id`, `ip_address`, `user_agent`, `referer`, `country`, `device`, `browser`, `os`, `created_at`
+- [x] Create model factories & seeders for both
 
 ### 1.4 URL Shortening — Core Logic
-- [ ] Service class: `LinkService` — generate unique short codes, create links, resolve links
-- [ ] Short code generation strategy (random alphanumeric, 6 chars default)
-- [ ] Redirect controller — resolve `/{shortCode}` and redirect to original URL
-- [ ] Record click data on each redirect (async via queued job)
-- [ ] Validate destination URLs (format, blacklist check)
+- [x] Service class: `LinkService` — generate unique short codes, create links, resolve links
+- [x] Short code generation strategy (random alphanumeric, 6 chars default)
+- [x] Redirect controller — resolve `/{shortCode}` and redirect to original URL
+- [x] Record click data on each redirect (async via queued job)
+- [x] Validate destination URLs (format, blacklist check)
 
 ### 1.5 User Dashboard — MVP
 - [ ] Dashboard layout (sidebar navigation, topbar, content area)
