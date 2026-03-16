@@ -21,6 +21,14 @@ class Link extends \Illuminate\Database\Eloquent\Model
         'title',
         'is_active',
         'expires_at',
+        'password',
+    ];
+
+    /**
+     * @var list<string>
+     */
+    protected $hidden = [
+        'password',
     ];
 
     /**

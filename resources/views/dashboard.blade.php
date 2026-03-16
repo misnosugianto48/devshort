@@ -3,7 +3,7 @@
 @section('title', 'Overview')
 
 @section('content')
-<div x-data="{ openCreateModal: {{ $errors->any() ? 'true' : 'false' }}, hasExpiration: {{ old('expires_at') ? 'true' : 'false' }} }">
+<div x-data="{ openCreateModal: {{ $errors->any() ? 'true' : 'false' }}, hasExpiration: {{ old('expires_at') ? 'true' : 'false' }}, hasPassword: {{ old('password') ? 'true' : 'false' }} }">
     <!-- Header Dashboard -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>
@@ -190,6 +190,28 @@
                     <div x-show="hasExpiration" x-cloak x-transition.opacity class="pl-11 pr-3 pb-3">
                         <input type="datetime-local" name="expires_at" id="expires_at" class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-slate-700 bg-slate-50 focus:bg-white" value="{{ old('expires_at') }}">
                         @error('expires_at')
+                            <p class="text-xs text-red-500 mt-2 font-semibold">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="border-t pt-4 space-y-4">
+                    <label class="flex items-start gap-3 cursor-pointer group p-3 rounded-xl hover:bg-slate-50 transition border border-transparent hover:border-slate-100">
+                        <div class="mt-0.5">
+                            <input type="checkbox" x-model="hasPassword" class="w-5 h-5 accent-indigo-600 rounded">
+                        </div>
+                        <div>
+                            <span class="text-sm font-bold text-slate-800 block">Lindungi dengan Password</span>
+                            <span class="text-xs text-slate-500 block mt-0.5">Pengunjung harus memasukkan password untuk melanjutkan.</span>
+                        </div>
+                    </label>
+
+                    <div x-show="hasPassword" x-cloak x-transition.opacity class="pl-11 pr-3 pb-3">
+                        <div class="relative">
+                            <input type="password" name="password" id="password" placeholder="Masukkan password yang kuat" class="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-slate-700 bg-slate-50 focus:bg-white">
+                            <i class="fas fa-lock absolute right-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                        </div>
+                        @error('password')
                             <p class="text-xs text-red-500 mt-2 font-semibold">{{ $message }}</p>
                         @enderror
                     </div>

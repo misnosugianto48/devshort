@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Link;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class LinkService
@@ -12,7 +13,7 @@ class LinkService
     /**
      * Create a new short link for a user.
      */
-    public function createLink(User $user, string $originalUrl, ?string $title = null, ?string $customAlias = null, ?\Carbon\Carbon $expiresAt = null): Link
+    public function createLink(User $user, string $originalUrl, ?string $title = null, ?string $customAlias = null, ?\Carbon\Carbon $expiresAt = null, ?string $password = null): Link
     {
         $shortCode = $customAlias ?: $this->generateShortCode();
 
@@ -22,6 +23,7 @@ class LinkService
             'title' => $title,
             'is_active' => true,
             'expires_at' => $expiresAt,
+            'password' => $password ? Hash::make($password) : null,
         ]);
 
         // Pre-cache the link to save an initial DB query on first visit

@@ -33,6 +33,11 @@ class RedirectController extends Controller
             abort(404, 'Link is inactive');
         }
 
+        // Check password protection
+        if ($link->password && ! session()->has('link_unlocked_'.$link->id)) {
+            return view('links.password', compact('link'));
+        }
+
         // Dispatch job to record the click analytics asynchronously
         RecordClickJob::dispatch(
             $link,

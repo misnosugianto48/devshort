@@ -20,10 +20,22 @@ class LinkController extends Controller
      */
     public function index(Request $request): View
     {
-        $links = $request->user()
-            ->links()
-            ->latest()
-            ->paginate(15);
+        $query = $request->user()->links();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('short_code', 'like', "%{$search}%")
+                    ->orWhere('original_url', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('is_active', $request->status === 'active');
+        }
+
+        $links = $query->latest()->paginate(15)->withQueryString();
 
         return view('links.index', compact('links'));
     }
@@ -42,7 +54,8 @@ class LinkController extends Controller
             $request->validated('original_url'),
             $request->validated('title'),
             $request->validated('custom_alias'),
-            $expiresAt
+            $expiresAt,
+            $request->validated('password')
         );
 
         return redirect()->back()->with('status', 'Tautan berhasil diperpendek!');
@@ -69,5 +82,70 @@ class LinkController extends Controller
         return view('links.show', compact('link', 'clickData'));
     }
 
-    // edit, update, destroy omitted for Phase 1 MVP (CRUD management moved to Phase 2)
+    /**
+     * Update the specified link.
+     */
+    public function update(Request $request, Link $link): RedirectResponse
+    {
+        if ($link->user_id !== $request->user()->id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $validated = $request->validate([
+            'title' => 'nullable|string|max:255',
+            'is_active' => 'boolean',
+        ]);
+
+        $link->update([
+            'title' => $validated['title'],
+            'is_active' => $request->has('is_active'),
+        ]);
+
+        return redirect()->back()->with('status', 'Tautan berhasil diperbarui!');
+    }
+
+    /**
+     * Remove the specified link.
+     */
+    public function destroy(Request $request, Link $link): RedirectResponse
+    {
+        if ($link->user_id !== $request->user()->id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $link->delete(); // Soft delete
+
+        return redirect()->back()->with('status', 'Tautan berhasil dihapus!');
+    }
+
+    /**
+     * Perform bulk actions on links.
+     */
+    public function bulkAction(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'action' => 'required|in:delete,activate,deactivate',
+            'ids' => 'required|array',
+            'ids.*' => 'exists:links,id',
+        ]);
+
+        $query = $request->user()->links()->whereIn('id', $validated['ids']);
+
+        switch ($validated['action']) {
+            case 'delete':
+                $query->delete();
+                $message = 'Tautan terpilih berhasil dihapus!';
+                break;
+            case 'activate':
+                $query->update(['is_active' => true]);
+                $message = 'Tautan terpilih berhasil diaktifkan!';
+                break;
+            case 'deactivate':
+                $query->update(['is_active' => false]);
+                $message = 'Tautan terpilih berhasil dinonaktifkan!';
+                break;
+        }
+
+        return redirect()->back()->with('status', $message ?? 'Aksi berhasil!');
+    }
 }

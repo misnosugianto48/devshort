@@ -34,6 +34,7 @@ class CreateLinkRequest extends FormRequest
                 'not_in:api,admin,dashboard,login,register,links,billing,settings,profile,logout,password,pricing,features',
             ],
             'expires_at' => ['nullable', 'date', 'after_or_equal:today'],
+            'password' => ['nullable', 'string', 'min:4', 'max:255'],
         ];
     }
 
@@ -54,6 +55,7 @@ class CreateLinkRequest extends FormRequest
             'custom_alias.max' => 'Custom alias maksimal 30 karakter.',
             'custom_alias.unique' => 'Custom alias ini sudah digunakan. Silakan pilih yang lain.',
             'custom_alias.not_in' => 'Kata ini merupakan reservasi sistem dan tidak dapat digunakan sebagai alias.',
+            'password.min' => 'Password minimal harus 4 karakter.',
         ];
     }
 }

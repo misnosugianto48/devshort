@@ -44,10 +44,19 @@ Route::middleware('auth')->group(function () {
         Route::get('dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
         // Links management
+        Route::post('links/bulk', [\App\Http\Controllers\LinkController::class, 'bulkAction'])->name('links.bulk');
         Route::resource('links', \App\Http\Controllers\LinkController::class)
-            ->only(['index', 'store', 'show']);
+            ->only(['index', 'store', 'show', 'update', 'destroy']);
     });
 });
+
+// Short Link Redirect Routes
+Route::post('/links/{link}/password', [\App\Http\Controllers\LinkPasswordController::class, 'verify'])->name('link.password.verify');
+
+// Link Preview Route
+Route::get('/{shortCode}+', [\App\Http\Controllers\PreviewController::class, 'show'])
+    ->where('shortCode', '[a-zA-Z0-9\-_]{3,}')
+    ->name('link.preview');
 
 // Short Link Redirect Route - MUST BE LAST
 // Alphanumeric, hyphens, and underscores allowed, minimum 3 characters

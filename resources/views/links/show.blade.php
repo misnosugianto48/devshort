@@ -48,13 +48,14 @@
         <p class="text-slate-500 text-sm mb-1 font-medium">Dibuat Pada</p>
         <h4 class="text-xl font-bold text-slate-800 mt-2">{{ $link->created_at->format('d M Y') }}</h4>
     </div>
-    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm text-center opacity-50 relative" title="Fitur Premium">
-        <div class="absolute inset-0 bg-white/20 backdrop-blur-[1px] rounded-3xl z-10"></div>
-        <div class="w-12 h-12 bg-orange-50 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 text-xl relative z-0">
-            <i class="fas fa-qrcode"></i>
+    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm text-center flex flex-col items-center justify-center">
+        <div class="mb-3">
+            {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::size(80)->color(79, 70, 229)->generate(url($link->short_code)) !!}
         </div>
-        <p class="text-slate-500 text-sm mb-1 font-medium relative z-0">QR Code Scans</p>
-        <h4 class="text-xl font-bold text-slate-800 mt-2 relative z-0">-- <span class="text-xs font-normal text-slate-400 bg-slate-100 px-2 py-0.5 rounded ml-2">Segera Hadir</span></h4>
+        <p class="text-slate-500 text-sm font-medium mb-2">QR Code Tautan</p>
+        <a href="data:image/svg+xml;base64,{{ base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::size(300)->color(79, 70, 229)->generate(url($link->short_code))) }}" download="qr-{{ $link->short_code }}.svg" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg hover:bg-indigo-100 transition inline-flex items-center gap-1">
+            <i class="fas fa-download"></i> Download SVG
+        </a>
     </div>
 </div>
 

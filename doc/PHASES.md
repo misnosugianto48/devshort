@@ -54,15 +54,15 @@
 **Goal:** Add premium link features — custom alias, expiration, password protection, link preview, and QR codes.
 
 ### 2.1 Custom Alias
-- [ ] Allow users to specify a custom alias when creating a link
-- [ ] Validate alias uniqueness and allowed characters (alphanumeric, hyphens)
-- [ ] Reserve system-level aliases (e.g., `api`, `admin`, `dashboard`, `login`)
+- [x] Allow users to specify a custom alias when creating a link
+- [x] Validate alias uniqueness and allowed characters (alphanumeric, hyphens)
+- [x] Reserve system-level aliases (e.g., `api`, `admin`, `dashboard`, `login`)
 
 ### 2.2 Link Expiration
-- [ ] Add `expires_at` column to `links` table
-- [ ] Expiration date picker in the create/edit link form
-- [ ] Check expiration on redirect — show "Link Expired" page if past due
-- [ ] Scheduled command to mark expired links as inactive
+- [x] Add `expires_at` column to `links` table
+- [x] Expiration date picker in the create/edit link form
+- [x] Check expiration on redirect — show "Link Expired" page if past due
+- [x] Scheduled command to mark expired links as inactive
 
 ### 2.3 Password Protected Links
 - [ ] Add `password` (hashed) column to `links` table
