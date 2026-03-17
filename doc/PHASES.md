@@ -95,25 +95,25 @@
 **Goal:** Build comprehensive analytics and an enhanced dashboard experience.
 
 ### 3.1 Analytics — Data Collection
-- [ ] Enrich click tracking: parse user-agent for device/browser/OS
-- [ ] GeoIP lookup for country detection (e.g., MaxMind GeoLite2)
-- [ ] Store referer domain extraction
-- [ ] Queue-based processing for all analytics data
+- [x] Enrich click tracking: parse user-agent for device/browser/OS
+- [x] GeoIP lookup for country detection (e.g., MaxMind GeoLite2)
+- [x] Store referer domain extraction
+- [x] Queue-based processing for all analytics data
 
 ### 3.2 Analytics — Dashboard Views
-- [ ] **Click timeline** — line chart (daily/weekly/monthly)
-- [ ] **Device breakdown** — pie chart (mobile vs desktop vs tablet)
-- [ ] **Browser & OS breakdown** — bar charts
-- [ ] **Country breakdown** — table with country flags
-- [ ] **Top referrers** — ranked list
-- [ ] **Unique vs total clicks** — comparison metric
-- [ ] Date range filter for all analytics
+- [x] **Click timeline** — line chart (daily/weekly/monthly)
+- [x] **Device breakdown** — pie chart (mobile vs desktop vs tablet)
+- [x] **Browser & OS breakdown** — bar charts
+- [x] **Country breakdown** — table with country flags
+- [x] **Top referrers** — ranked list
+- [x] **Unique vs total clicks** — comparison metric
+- [x] Date range filter for all analytics
 
 ### 3.3 Dashboard Enhancements
-- [ ] Dashboard overview cards with sparkline charts
-- [ ] Recent activity feed
-- [ ] Quick-create link widget on dashboard
-- [ ] Export analytics data as CSV
+- [x] Dashboard overview cards with sparkline charts
+- [x] Recent activity feed
+- [x] Quick-create link widget on dashboard
+- [x] Export analytics data as CSV
 
 ---
 
@@ -151,38 +151,33 @@
 
 **Goal:** Build the administration backend for platform management.
 
-### 5.1 Admin Authentication & Layout
-- [ ] Admin middleware (role check)
-- [ ] Admin dashboard layout (separate from user dashboard)
-- [ ] Admin route group under `/admin`
-
-### 5.2 Platform Analytics
+### 5.1 Platform Analytics
 - [ ] Total users, total links, total clicks — summary cards
 - [ ] New users over time chart
 - [ ] Links created over time chart
 - [ ] Revenue metrics (MRR, ARR) — if payment is integrated
 
-### 5.3 User Management
+### 5.2 User Management
 - [ ] List all users with search/filter/pagination
 - [ ] View user details (links, subscription, analytics)
 - [ ] Suspend / unsuspend user
 - [ ] Manually upgrade/downgrade user plan
 - [ ] Impersonate user (login as user for support)
 
-### 5.4 Subscription Plan Management
+### 5.3 Subscription Plan Management
 - [ ] CRUD interface for plans
 - [ ] Configure feature limits per plan
 - [ ] Set pricing (monthly/yearly)
 - [ ] Toggle plan active/inactive
 - [ ] Trial period configuration
 
-### 5.5 Link Moderation
+### 5.4 Link Moderation
 - [ ] List all links with search/filter
 - [ ] Remove/disable spam or malicious links
 - [ ] URL blacklist management (blocked destination domains)
 - [ ] Alias blacklist management (reserved/blocked words)
 
-### 5.6 Domain Management
+### 5.5 Domain Management
 - [ ] Manage default short domains
 - [ ] View/verify user custom domains
 - [ ] SSL and CNAME status monitoring
