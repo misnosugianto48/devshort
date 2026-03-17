@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
         Route::post('links/bulk', [\App\Http\Controllers\LinkController::class, 'bulkAction'])->name('links.bulk');
         Route::resource('links', \App\Http\Controllers\LinkController::class)
             ->only(['index', 'store', 'show', 'update', 'destroy']);
+        Route::get('links/{link}/export', [\App\Http\Controllers\LinkController::class, 'export'])->name('links.export');
     });
 });
 

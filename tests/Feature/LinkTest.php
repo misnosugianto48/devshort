@@ -14,10 +14,17 @@ it('parses user agent correctly in the record click job', function () {
 
     $job = new RecordClickJob(
         $link,
-        '192.168.1.1',
+        '8.8.8.8', // Use public IP for GeoIP mock
         'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Mobile/15E148 Safari/604.1',
-        'https://twitter.com'
+        'https://twitter.com/some/path'
     );
+
+    // Mock Location Facade
+    $position = new \Stevebauman\Location\Position;
+    $position->countryCode = 'US';
+    \Stevebauman\Location\Facades\Location::shouldReceive('get')
+        ->with('8.8.8.8')
+        ->andReturn($position);
 
     // Execute the job synchronously
     $job->handle();
@@ -30,9 +37,10 @@ it('parses user agent correctly in the record click job', function () {
 
     expect($click)
         ->not->toBeNull()
-        ->ip_address->toBe('192.168.1.1')
-        ->referer->toBe('https://twitter.com')
+        ->ip_address->toBe('8.8.8.8')
+        ->referer->toBe('twitter.com')
         ->device->toBe('mobile')
         ->browser->toBe('Safari')
-        ->os->toBe('iOS');
+        ->os->toBe('iOS')
+        ->country->toBe('US');
 });

@@ -17,11 +17,16 @@
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden">
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden flex flex-col justify-between">
             <div class="absolute top-0 right-0 p-4 opacity-10 text-indigo-500"><i class="fas fa-mouse-pointer text-5xl"></i></div>
-            <p class="text-slate-500 text-sm mb-1 font-medium">Total Klik</p>
-            <h4 class="text-3xl font-bold text-slate-800">{{ number_format($totalClicks) }}</h4>
-            <p class="text-indigo-500 text-xs mt-2 font-bold"><i class="fas fa-chart-line mr-1"></i> Dari semua link</p>
+            <div>
+                <p class="text-slate-500 text-sm mb-1 font-medium">Total Klik</p>
+                <h4 class="text-3xl font-bold text-slate-800">{{ number_format($totalClicks) }}</h4>
+                <p class="text-indigo-500 text-xs mt-2 font-bold"><i class="fas fa-chart-line mr-1"></i> 7 hari terakhir</p>
+            </div>
+            <div class="w-full h-12 mt-4 -mx-1 -mb-2">
+                <canvas id="sparklineChart"></canvas>
+            </div>
         </div>
         
         <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden">
@@ -46,73 +51,98 @@
         </div>
     </div>
 
-    <!-- Recent Activity -->
-    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-        <div class="p-6 border-b border-slate-50 flex justify-between items-center">
-            <h3 class="font-bold text-lg text-slate-800">Link Terbaru</h3>
-            <a href="{{ route('links.index') }}" class="text-indigo-600 text-sm font-bold hover:underline">Lihat Semua &rarr;</a>
-        </div>
-        
-        <div class="overflow-x-auto">
-            @if($recentLinks->count() > 0)
-                <table class="w-full text-left whitespace-nowrap">
-                    <thead class="bg-slate-50 text-slate-400 text-xs uppercase font-semibold">
-                        <tr>
-                            <th class="px-6 py-4">Link Asli</th>
-                            <th class="px-6 py-4">Short Link</th>
-                            <th class="px-6 py-4">Klik</th>
-                            <th class="px-6 py-4">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-50">
-                        @foreach($recentLinks as $link)
-                            <tr class="hover:bg-slate-50/50 transition duration-150">
-                                <td class="px-6 py-4">
-                                    <div class="text-sm font-medium text-slate-900 truncate max-w-xs" title="{{ $link->title ?? $link->original_url }}">
-                                        {{ $link->title ?? $link->original_url }}
-                                    </div>
-                                    <div class="text-xs text-slate-500 truncate max-w-xs">
-                                        {{ $link->original_url }}
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <a href="{{ url($link->short_code) }}" target="_blank" class="text-indigo-600 font-bold hover:underline flex items-center gap-1 group">
-                                        {{ request()->getHost() }}/{{ $link->short_code }}
-                                        <i class="fas fa-external-link-alt text-xs opacity-0 group-hover:opacity-100 transition"></i>
-                                    </a>
-                                </td>
-                                <td class="px-6 py-4 font-semibold text-slate-700">
-                                    {{ number_format($link->clicks_count) }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex gap-2" x-data="{ copied: false }">
-                                        <button @click="navigator.clipboard.writeText('{{ url($link->short_code) }}'); copied = true; setTimeout(() => copied = false, 2000)" 
-                                                class="p-2 bg-slate-100 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg text-slate-500 transition tooltip" 
-                                                :title="copied ? 'Disalin!' : 'Salin URL'">
-                                            <i class="fas fa-copy" x-show="!copied"></i>
-                                            <i class="fas fa-check text-green-500" x-show="copied" x-cloak></i>
-                                        </button>
-                                        <a href="{{ route('links.show', $link) }}" class="p-2 bg-slate-100 hover:bg-purple-100 hover:text-purple-600 rounded-lg text-slate-500 transition" title="Lihat Analitik">
-                                            <i class="fas fa-chart-line"></i>
-                                        </a>
-                                    </div>
-                                </td>
+    <!-- Recent Activity & Links Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Recent Links -->
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+            <div class="p-6 border-b border-slate-50 flex justify-between items-center">
+                <h3 class="font-bold text-lg text-slate-800">Link Terbaru</h3>
+                <a href="{{ route('links.index') }}" class="text-indigo-600 text-sm font-bold hover:underline">Lihat Semua &rarr;</a>
+            </div>
+            
+            <div class="overflow-x-auto flex-1">
+                @if($recentLinks->count() > 0)
+                    <table class="w-full text-left whitespace-nowrap">
+                        <thead class="bg-slate-50 text-slate-400 text-xs uppercase font-semibold">
+                            <tr>
+                                <th class="px-6 py-4">Link Asli</th>
+                                <th class="px-6 py-4">Short Link</th>
+                                <th class="px-6 py-4">Klik</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @else
-                <div class="p-12 text-center flex flex-col items-center justify-center">
-                    <div class="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center text-indigo-400 mb-4">
-                        <i class="fas fa-link text-2xl"></i>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            @foreach($recentLinks as $link)
+                                <tr class="hover:bg-slate-50/50 transition duration-150">
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm font-medium text-slate-900 truncate max-w-[150px]" title="{{ $link->title ?? $link->original_url }}">
+                                            {{ $link->title ?? $link->original_url }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <a href="{{ url($link->short_code) }}" target="_blank" class="text-indigo-600 font-bold hover:underline text-sm truncate max-w-[150px] block">
+                                            {{ request()->getHost() }}/{{ $link->short_code }}
+                                        </a>
+                                    </td>
+                                    <td class="px-6 py-4 font-semibold text-slate-700 text-sm">
+                                        {{ number_format($link->clicks_count) }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @else
+                    <div class="p-12 text-center flex flex-col items-center justify-center h-full">
+                        <div class="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center text-indigo-400 mb-4">
+                            <i class="fas fa-link text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-700 mb-1">Belum ada tautan</h4>
+                        <p class="text-slate-500 text-sm max-w-xs mx-auto mb-4">Mulai perpendek tautan untuk melihat data.</p>
+                        <button @click="openCreateModal = true" class="px-4 py-2 bg-indigo-50 text-indigo-600 font-bold text-sm rounded-xl hover:bg-indigo-100 transition">
+                            Buat Tautan
+                        </button>
                     </div>
-                    <h4 class="text-lg font-bold text-slate-700 mb-1">Belum ada tautan</h4>
-                    <p class="text-slate-500 max-w-sm mx-auto mb-6">Mulai perpendek tautan panjang Anda untuk kemudahan berbagi dan pantau statistiknya.</p>
-                    <button @click="openCreateModal = true" class="px-6 py-2.5 bg-indigo-50 text-indigo-600 font-bold rounded-xl hover:bg-indigo-100 transition">
-                        Buat Tautan Pertama
-                    </button>
-                </div>
-            @endif
+                @endif
+            </div>
+        </div>
+
+        <!-- Recent Clicks Activity Feed -->
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+            <div class="p-6 border-b border-slate-50 flex justify-between items-center">
+                <h3 class="font-bold text-lg text-slate-800">Aktivitas Terbaru</h3>
+            </div>
+            <div class="p-0 flex-1 overflow-y-auto max-h-[400px]">
+                @if($recentActivity->count() > 0)
+                    <div class="divide-y divide-slate-50">
+                        @foreach($recentActivity as $click)
+                            <div class="p-4 flex items-start gap-4 hover:bg-slate-50/50 transition duration-150">
+                                <div class="w-10 h-10 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center flex-shrink-0 mt-1">
+                                    <i class="fas fa-mouse-pointer text-sm"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-slate-800 truncate">
+                                        Seseorang mengklik <a href="{{ route('links.show', $click->link) }}" class="text-indigo-600 hover:underline">{{ $click->link->title ?? $click->link->short_code }}</a>
+                                    </p>
+                                    <div class="flex items-center gap-3 mt-1 text-xs text-slate-500">
+                                        <span title="{{ $click->created_at->format('d M Y H:i:s') }}">{{ $click->created_at->diffForHumans() }}</span>
+                                        <span>•</span>
+                                        <span class="capitalize"><i class="fas fa-desktop mr-1"></i>{{ $click->device }}</span>
+                                        <span>•</span>
+                                        <span><i class="fas fa-globe-americas mr-1"></i>{{ $click->country === 'Unknown' ? 'Unknown' : $click->country }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="p-12 text-center flex flex-col items-center justify-center h-full">
+                        <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 mb-4">
+                            <i class="fas fa-chart-line text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-700 mb-1">Belum ada klik</h4>
+                        <p class="text-slate-500 text-sm max-w-xs mx-auto">Sebarkan tautan Anda untuk mulai merekam aktivitas pengunjung.</p>
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
 
@@ -225,4 +255,57 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+@if($sparklineData->count() > 0)
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('sparklineChart').getContext('2d');
+        const data = @json($sparklineData);
+        
+        let gradient = ctx.createLinearGradient(0, 0, 0, 48);
+        gradient.addColorStop(0, 'rgba(99, 102, 241, 0.3)');
+        gradient.addColorStop(1, 'rgba(99, 102, 241, 0.0)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.map(item => item.date),
+                datasets: [{
+                    data: data.map(item => item.count),
+                    borderColor: '#6366f1',
+                    backgroundColor: gradient,
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    pointHoverRadius: 4,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: '#1e293b',
+                        displayColors: false,
+                        callbacks: {
+                            title: () => null, // Hide title
+                        }
+                    }
+                },
+                scales: {
+                    x: { display: false },
+                    y: { display: false, min: 0 }
+                },
+                layout: { padding: 0 },
+                interaction: { intersect: false, mode: 'index' },
+            }
+        });
+    });
+</script>
+@endif
 @endsection

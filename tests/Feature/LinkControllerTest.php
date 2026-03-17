@@ -67,7 +67,7 @@ it('allows a user to view link analytics', function () {
     $response->assertStatus(200)
         ->assertViewIs('links.show')
         ->assertSee('My Test Link')
-        ->assertSee('Timeline Klik');
+        ->assertSee('Belum Ada Data');
 });
 
 it('prevents a user from viewing another users link analytics', function () {
@@ -76,4 +76,13 @@ it('prevents a user from viewing another users link analytics', function () {
     $response = $this->actingAs($otherUser)->get("/links/{$this->link->id}");
 
     $response->assertStatus(403);
+});
+
+it('allows user to export link click data as CSV', function () {
+    $this->actingAs($this->user);
+    $response = $this->get(route('links.export', $this->link));
+
+    $response->assertStatus(200)
+        ->assertHeader('Content-Type', 'text/csv; charset=UTF-8')
+        ->assertHeader('Content-Disposition', 'attachment; filename=analytics-'.$this->link->short_code.'-'.date('Y-m-d').'.csv');
 });

@@ -71,15 +71,65 @@ class LinkController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        // Get basic click stats grouped by date (last 30 days) for MVP
-        $clickData = $link->clicks()
-            ->where('created_at', '>=', now()->subDays(30))
+        $period = $request->input('period', '30d');
+        $startDate = match ($period) {
+            '7d' => now()->subDays(7),
+            '30d' => now()->subDays(30),
+            'all' => \Carbon\Carbon::create(2000, 1, 1),
+            default => now()->subDays(30),
+        };
+
+        $baseQuery = $link->clicks()->where('created_at', '>=', $startDate);
+
+        // Timeline
+        $clickData = (clone $baseQuery)
             ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
             ->groupBy('date')
             ->orderBy('date', 'asc')
             ->get();
 
-        return view('links.show', compact('link', 'clickData'));
+        // Devices
+        $deviceData = (clone $baseQuery)
+            ->selectRaw('device, COUNT(*) as count')
+            ->groupBy('device')
+            ->orderByDesc('count')
+            ->get();
+
+        // Browsers
+        $browserData = (clone $baseQuery)
+            ->selectRaw('browser, COUNT(*) as count')
+            ->groupBy('browser')
+            ->orderByDesc('count')
+            ->limit(5)
+            ->get();
+
+        // OS
+        $osData = (clone $baseQuery)
+            ->selectRaw('os, COUNT(*) as count')
+            ->groupBy('os')
+            ->orderByDesc('count')
+            ->limit(5)
+            ->get();
+
+        // Countries
+        $countryData = (clone $baseQuery)
+            ->selectRaw('country, COUNT(*) as count')
+            ->groupBy('country')
+            ->orderByDesc('count')
+            ->limit(10)
+            ->get();
+
+        // Referers
+        $refererData = (clone $baseQuery)
+            ->selectRaw('referer, COUNT(*) as count')
+            ->groupBy('referer')
+            ->orderByDesc('count')
+            ->limit(10)
+            ->get();
+
+        return view('links.show', compact(
+            'link', 'clickData', 'deviceData', 'browserData', 'osData', 'countryData', 'refererData', 'period'
+        ));
     }
 
     /**
@@ -147,5 +197,44 @@ class LinkController extends Controller
         }
 
         return redirect()->back()->with('status', $message ?? 'Aksi berhasil!');
+    }
+
+    /**
+     * Export link analytics data as CSV.
+     */
+    public function export(Request $request, Link $link)
+    {
+        if ($link->user_id !== $request->user()->id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="analytics-'.$link->short_code.'-'.date('Y-m-d').'.csv"',
+        ];
+
+        return response()->streamDownload(function () use ($link) {
+            $handle = fopen('php://output', 'w');
+
+            // Add CSV headers
+            fputcsv($handle, ['Waktu', 'IP Address', 'Negara', 'Perangkat', 'Browser', 'OS', 'Referer']);
+
+            // Add data rows, chunked to save memory
+            $link->clicks()->latest()->chunk(500, function ($clicks) use ($handle) {
+                foreach ($clicks as $click) {
+                    fputcsv($handle, [
+                        $click->created_at->format('Y-m-d H:i:s'),
+                        $click->ip_address ?? 'Unknown',
+                        $click->country ?? 'Unknown',
+                        $click->device ?? 'Unknown',
+                        $click->browser ?? 'Unknown',
+                        $click->os ?? 'Unknown',
+                        $click->referer ?? 'Direct',
+                    ]);
+                }
+            });
+
+            fclose($handle);
+        }, 'analytics-'.$link->short_code.'-'.date('Y-m-d').'.csv', $headers);
     }
 }

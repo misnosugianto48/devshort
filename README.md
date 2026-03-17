@@ -11,7 +11,10 @@ DevShort allows users to create short links, manage them via a dashboard, analyz
 - **URL Shortening** — Generate short links from long URLs
 - **Custom Alias** — Define your own short link slug (e.g. `devshort.id/promo`)
 - **Custom Branded Domain** — Connect your own domain (e.g. `go.brand.com/sale`)
-- **Link Analytics** — Track clicks, devices, countries, referrers
+- **Enhanced Link Analytics** — Comprehensive tracking including device types, browsers, OS, countries (GeoIP), and top referrers
+- **Data Visualization** — Interactive charts (timeline, doughnut, bars) and detailed breakdown tables
+- **CSV Export** — Download detailed analytics data for further reporting
+- **Activity Feed** — Real-time recent click activity visible on the dashboard
 - **QR Code Generator** — Downloadable QR codes for each link
 - **Link Expiration** — Set an expiry date for links
 - **Password Protected Links** — Require a password before redirecting

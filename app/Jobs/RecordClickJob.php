@@ -37,15 +37,29 @@ class RecordClickJob implements ShouldQueue
             $device = 'tablet';
         }
 
+        // Parse referer to get domain
+        $refererDomain = null;
+        if ($this->referer) {
+            $refererDomain = parse_url($this->referer, PHP_URL_HOST);
+        }
+
+        // Determine country from IP
+        $country = 'Unknown';
+        if ($this->ipAddress) {
+            if ($position = \Stevebauman\Location\Facades\Location::get($this->ipAddress)) {
+                $country = $position->countryCode;
+            }
+        }
+
         // Record the click
         $this->link->clicks()->create([
             'ip_address' => $this->ipAddress,
             'user_agent' => $this->userAgent,
-            'referer' => $this->referer,
+            'referer' => $refererDomain,
             'device' => $device,
             'browser' => $agent->browser() ?: 'Unknown',
             'os' => $agent->platform() ?: 'Unknown',
-            // Country will be resolved via another job in Phase 3
+            'country' => $country,
         ]);
 
         // Increment the denormalized counter

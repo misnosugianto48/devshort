@@ -26,6 +26,21 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        return view('dashboard', compact('totalClicks', 'totalLinks', 'recentLinks'));
+        // Get recent clicks for activity feed
+        $recentActivity = \App\Models\Click::with('link')
+            ->whereIn('link_id', $user->links()->select('id'))
+            ->latest()
+            ->take(8)
+            ->get();
+
+        // Get clicks for the last 7 days for the sparkline chart
+        $sparklineData = \App\Models\Click::whereIn('link_id', $user->links()->select('id'))
+            ->where('created_at', '>=', now()->subDays(7))
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->get();
+
+        return view('dashboard', compact('totalClicks', 'totalLinks', 'recentLinks', 'recentActivity', 'sparklineData'));
     }
 }

@@ -65,28 +65,28 @@
 - [x] Scheduled command to mark expired links as inactive
 
 ### 2.3 Password Protected Links
-- [ ] Add `password` (hashed) column to `links` table
-- [ ] Password input option in create/edit link form
-- [ ] Intermediate password-entry page before redirect
-- [ ] Validate password and redirect on success
+- [x] Add `password` (hashed) column to `links` table
+- [x] Password input option in create/edit link form
+- [x] Intermediate password-entry page before redirect
+- [x] Validate password and redirect on success
 
 ### 2.4 Link Preview (`+` suffix)
-- [ ] Route: `/{shortCode}+` → show link preview page
-- [ ] Preview page displays: destination URL, title, click count, creation date
-- [ ] Option to proceed to destination or go back
+- [x] Route: `/{shortCode}+` → show link preview page
+- [x] Preview page displays: destination URL, title, click count, creation date
+- [x] Option to proceed to destination or go back
 
 ### 2.5 QR Code Generator
-- [ ] Install QR code library (e.g., `simplesoftwareio/simple-qrcode`)
-- [ ] Generate QR code for each link on the detail page
-- [ ] Download QR code as PNG/SVG
-- [ ] QR code color customization (foreground/background)
+- [x] Install QR code library (e.g., `simplesoftwareio/simple-qrcode`)
+- [x] Generate QR code for each link on the detail page
+- [x] Download QR code as PNG/SVG
+- [x] QR code color customization (foreground/background)
 
 ### 2.6 Link Management Enhancements
-- [ ] Edit link (update alias, title, expiration, password)
-- [ ] Delete link (soft delete)
-- [ ] Toggle link active/inactive
-- [ ] Bulk actions (delete, activate, deactivate)
-- [ ] Search and filter links (by status, date range, keyword)
+- [x] Edit link (update alias, title, expiration, password)
+- [x] Delete link (soft delete)
+- [x] Toggle link active/inactive
+- [x] Bulk actions (delete, activate, deactivate)
+- [x] Search and filter links (by status, date range, keyword)
 
 ---
 
